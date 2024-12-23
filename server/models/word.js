@@ -7,6 +7,11 @@ const wordSchema = new mongoose.Schema(
       required: true,
     },
 
+    originalSpelled: {
+      type: String,
+      required: true,
+    },
+
     ipaOriginal: {
       type: String,
       required: true,
@@ -16,6 +21,7 @@ const wordSchema = new mongoose.Schema(
         type: String,
         required: true,
       },
+      
       
     
     // uploadedAt: {
