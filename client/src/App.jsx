@@ -7,6 +7,8 @@ import { Routes, Route } from "react-router-dom";
 import axios from "axios";
 
 import PitchShift from './pages/PitchShift.jsx';
+import Carousel from './pages/Carousel.jsx';
+import Notation from './components/Notation.jsx';
 
 
 axios.defaults.baseURL = "http://localhost:8000";
@@ -22,6 +24,8 @@ function App() {
 
     <Routes>
     <Route path="/pitchshift" element={<PitchShift />} />
+    <Route path="/carousel" element={<Carousel />} />
+    <Route path="/musicalnotation" element={<Notation/>}/>
     </Routes>
    </>
   )
