@@ -1,11 +1,15 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-function ThreeDivLayout() {
+function Menu() {
+  const navigate = useNavigate();
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
-      {/* First Division */}
+        
+              
+      {/* Third Division */}
       <div style={{ width: '100%', textAlign: 'center', padding: '20px', border: '1px solid #ccc' }}>
-        <button onClick={() => alert('First Button Clicked!')}>First Button</button>
+        <button onClick={() => navigate('/levels')}>Start Practice Levels!</button>
       </div>
       
       {/* Second Division */}
@@ -13,12 +17,14 @@ function ThreeDivLayout() {
         {/* Place your image here */}
       </div>
       
-      {/* Third Division */}
+
+      {/* First Division */}
       <div style={{ width: '100%', textAlign: 'center', padding: '20px', border: '1px solid #ccc' }}>
-        <button onClick={() => alert('Second Button Clicked!')}>Second Button</button>
+        <button onClick={() => navigate('/createlevel')}>Create Your Level!</button>
       </div>
+  
     </div>
   );
 }
 
-export default ThreeDivLayout;
+export default Menu;

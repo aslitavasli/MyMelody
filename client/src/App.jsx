@@ -6,9 +6,11 @@ import * as Pitchfinder from "pitchfinder";
 import { Routes, Route } from "react-router-dom";
 import axios from "axios";
 
-import PitchShift from './pages/PitchShift.jsx';
+import CreateLevel from './pages/CreateLevel.jsx';
 import Carousel from './pages/Carousel.jsx';
 import Notation from './components/Notation.jsx';
+import Menu from './pages/Menu.jsx';
+import PracticeLevels from './pages/PracticeLevels.jsx';
 
 
 axios.defaults.baseURL = "http://localhost:8000";
@@ -23,9 +25,12 @@ function App() {
 <>
 
     <Routes>
-    <Route path="/pitchshift" element={<PitchShift />} />
-    <Route path="/carousel" element={<Carousel />} />
+    {/* <Route path="/" element={<Welcome />} /> */}
+    <Route path="/menu" element={<Menu />} />
+    <Route path="/createlevel" element={<CreateLevel />} />
+    <Route path="/practice" element={<Carousel />} />
     <Route path="/musicalnotation" element={<Notation/>}/>
+    <Route path ="/levels" element={<PracticeLevels/>} />
     </Routes>
    </>
   )

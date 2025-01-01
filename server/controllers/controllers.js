@@ -1,7 +1,8 @@
 const dotenv = require('dotenv').config()
 const AWS = require('aws-sdk');
 const axios = require('axios');
-const Groq = require('groq-sdk')
+// const Groq = require('groq-sdk')
+const OpenAI = require('openai')
 const Word = require('../models/word');
 
 const { PollyClient, SynthesizeSpeechCommand, Engine, SpeechMarkType } = require('@aws-sdk/client-polly'); 
@@ -17,8 +18,13 @@ const s3 = new AWS.S3({
 const s3Bucket = process.env.AWS_S3_BUCKET_NAME; // Replace with your S3 bucket name
 
 
-//initializing groq API
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+// //initializing groq API
+// const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+
 
 const polly = new PollyClient({
   region: process.env.AWS_REGION,  // Ensure you have the correct region
@@ -60,9 +66,15 @@ const handleSentence = async (req, res) => {
   
     for (const word of words) {
         currWord = await processword(word)
-        pronounciations.push(currWord.audioData)
+
+        for (i = 0; i< currWord.audioData.length; i++){
+        pronounciations.push(currWord.audioData[i])
+        console.log('a')
+        console.log(currWord.audioData[i])
+        }
+
         console.log(currWord.originalSpelled)
-        spellings.push((currWord.originalSpelled).split('-'))
+        spellings.push(...currWord.originalSpelled.split(/(?=-)/))
         determiningPitches += (currWord.originalSpelled) + ' ';
         i++;
     }
@@ -149,8 +161,9 @@ const processword = async (word) => {
         i++
       }
       //break the word into syllables using LLM
-      const groqResponse = await breakIntoSyllables(ipaFormat)
-      const spelledIpa = await JSON.parse(groqResponse.choices[0]?.message?.content)
+      const openAIResponse = await breakIntoSyllables(word, ipaFormat)
+      console.log(openAIResponse)
+      const spelledIpa = await JSON.parse(openAIResponse.choices[0]?.message?.content)
 
       //get an array list
       console.log('original ipa')
@@ -175,13 +188,13 @@ const processword = async (word) => {
           console.log(syllables[i])
           
             //Polly generates a low pitch version of the syllable (indicated by parameter 0)
-            const pronounciationUrlLow =await generatePollyAudio(syllables[i], word, i, 0, false)
+            const pronounciationUrl = await generatePollyAudio(syllables[i], word, i, 0, false)
 
             //Polly generates a high pitch version of the syllable (indicated by parameter 1)
-            const pronounciationUrlHigh = await generatePollyAudio(syllables[i], word, i, 1, false)
+            await generatePollyAudio(syllables[i], word, i, 1, false)
 
-            WordEntry.audioData.push(pronounciationUrlHigh);  // Add audio link to the audioData array
-            WordEntry.audioData.push(pronounciationUrlLow);  // Add audio link to the audioData array
+            WordEntry.audioData.push(pronounciationUrl);  // Add audio link to the audioData array
+            // WordEntry.audioData.push(pronounciationUrlLow);  // Add audio link to the audioData array
           }
         
       }
@@ -197,33 +210,35 @@ const processword = async (word) => {
 
 /******** breakIntoSyllables **********/
 /* This function takes a IPA formatted word and breaks the word into syllables based on pronounciation.
-* It makes a call to the GroqAPI and returns the hyphenated version of the word.
+* It makes a call to the OpenAI API and returns the hyphenated version of the word.
 *
 */
-const breakIntoSyllables = async (word) => {
+const breakIntoSyllables = async (word, ipa) => {
 
-  return groq.chat.completions.create({
+  return openai.chat.completions.create({
+    model: "gpt-4o-mini",
     messages: [
       {
         role: "user",
-        content: `Please break down the following word into syllables by hyphenating according to its phonetic pronunciation. Ensure that syllable boundaries are based on phonological rules rather than spelling, following the guidelines of the International Phonetic Alphabet (IPA). The IPA transcription should remain unchanged, and syllables should only be marked using hyphens where natural syllable breaks occur. Return the result in the following JSON format:
+        content: `I will provide you with two versions of a word. One will be the IPA format and the one will be original. Please break down both into syllables by hyphenating according to its phonetic pronunciation. Ensure that syllable boundaries are based on phonological rules rather than spelling, following the guidelines of the International Phonetic Alphabet (IPA). The IPA transcription should remain unchanged, and syllables should only be marked using hyphens where natural syllable breaks occur. Return the result in the following JSON format: 
 
-        hyphen_ipa: The IPA transcription of the word with syllables hyphenated.
-        original_spelled: The normal spelling of the word with syllables hyphenated. 
+        {
+          "hyphen_ipa": "The IPA transcription of the word with syllables hyphenated.",
+          "original_spelled": "The normal spelling of the word with syllables hyphenated."
+        }
 
-        The IPA format should be the same as the original, and no changes to the original pronunciation should occur. Please verify syllable boundaries based on pronunciation, not spelling.: ${word}`,
-      },
-
-      {
-        "role": "assistant",
-        "content": "```json"
+        The IPA format should be the same as the original, and no changes to the original pronunciation should occur. Please verify syllable boundaries based on pronunciation, not spelling. Do not respond with anything other than the JSON object. The original word: ${word} IPA Spelling of the word: ${ipa}`
       }
     ],
-    model: "llama3-8b-8192",
-    "stop": "```"
+    temperature: 1,
+    max_tokens: 2048,
+    top_p: 1,
+    frequency_penalty: 0,
+    presence_penalty: 0
   });
+};
 
-}
+
 
 /****** generatePollyAudio ********/
 /* This function takes the IPA spelling of a syllable and generates IPA accurate  
@@ -294,7 +309,7 @@ const generatePollyAudio = async (ipa, word, syllableIndex, pitch, isMonosyllabl
 
     console.log(`Audio uploaded to S3 at: ${audioKey}`);
     
-    return `https://${s3Bucket}.s3.${process.env.AWS_REGION}.amazonaws.com/${audioKey}`;
+    return `https://${s3Bucket}.s3.${process.env.AWS_REGION}.amazonaws.com/audio/${word}/syllable_${syllableIndex}_`;
    
 
 
@@ -311,19 +326,22 @@ const determineFlow = (spellings) => {
   low = true
   monosyllable = true
 
+  console.log('spellings: ', spellings)
   for (let i = (spellings.length)-1; i >= 0; i--){
       console.log(spellings[i])
-    if (spellings[i] == '-'){
+    if (spellings[i] == '-' || spellings[i] == ' '){
       
       monosyllable = false
       if (low){
         pitches.unshift(0)
         low = false
+        console.log('i happen')
       }
       
       else{
         pitches.unshift(1)
         low = true
+        console.log('me too')
       }
 
     }
@@ -331,12 +349,16 @@ const determineFlow = (spellings) => {
   }
 
   //account for the first part
-  if (low){
-    pitches.unshift(0)
-  }
+  if (monosyllable){
+    if (low){
+      pitches.unshift(0)
+      console.log('i happen 2')
+    }
 
-  else{
-    pitches.unshift(1)
+    else{
+      pitches.unshift(1)
+      console.log('i happen 3')
+    }
   }
   
   return pitches

@@ -1,18 +1,29 @@
 import React, { useState, useEffect } from 'react';
 
-const MusicalNotes = ({ syllables, initialPitches, audioUrls }) => {
+const MusicalNotes = ({ syllables, initialPitches, audioUrls, fading, alone, updatePitches }) => {
   const [pitches, setPitches] = useState(initialPitches);
   const [isEditing, setIsEditing] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentAudioIndex, setCurrentAudioIndex] = useState(0);
+  const [currentAudioIndex, setCurrentAudioIndex] = useState(-1);
   const [audio, setAudio] = useState(null); // Initially no audio is set
   const [audioSequenceEnded, setAudioSequenceEnded] = useState(false)
   const [beginningBeforeStart, setBeginningBeforeStart] = useState(true)
   const [showTap, setShowTap] = useState(false)
-
+  
+  // const pianoHighAudio = new Audio('https://syllablepronounciations.s3.us-east-1.amazonaws.com/piano/high_pitch_piano.mp3');
+  // const pianoLowAudio = new Audio('https://syllablepronounciations.s3.us-east-1.amazonaws.com/piano/low_pitch_piano.mp3');
+  
   if (syllables.length !== pitches.length) {
     console.error('Syllables and pitches arrays must have the same length');
     return null;
+  }
+
+  if (fading){
+    var fadeStartingIndex = Math.ceil(syllables.length / 2);
+  }
+
+  if (alone){
+    var fadeStartingIndex = 0;
   }
 
   const svgWidth = 50 + syllables.length * 100;
@@ -21,6 +32,7 @@ const MusicalNotes = ({ syllables, initialPitches, audioUrls }) => {
     if (!isEditing) return; // Only toggle pitch if editing mode is active
     const newPitches = [...pitches];
     newPitches[index] = newPitches[index] === 1 ? 0 : 1; // Toggle between high (1) and low (0)
+    updatePitches(newPitches)
     setPitches(newPitches);
   };
 
@@ -56,32 +68,67 @@ const MusicalNotes = ({ syllables, initialPitches, audioUrls }) => {
       return
     }
 
-      //the user has pressed play, but the audio sequence hasn't ended yet
-    
-    // Start playing the audio sequence
-    setIsPlaying(true)
-    
-    setShowTap(true)
-    // Hide "Tap" after 50ms
-    setTimeout(() => {
-    setShowTap(false);
-    }, 250);
+    //FIRST PLAY 
+    if (beginningBeforeStart){
+      setCurrentAudioIndex(0)
+      setIsPlaying(true)
+      setBeginningBeforeStart(false)
+      
+      setShowTap(true)
+      // Hide "Tap" after 50ms
+      setTimeout(() => {
+      setShowTap(false);
+      }, 250);
 
-    audio.play()
-    setBeginningBeforeStart(false)
-  
+    }
+
+
+    if (audio){
+        //the user has pressed play, but the audio sequence hasn't ended yet
+      // Start playing the audio sequence
+      setIsPlaying(true)
+      
+      setShowTap(true)
+      // Hide "Tap" after 50ms
+      setTimeout(() => {
+      setShowTap(false);
+      }, 250);
+
+      audio.play()
+      setBeginningBeforeStart(false)
+      }
   
   };
 
   const playAudioSequence = (url, pitch) => {
+    console.log('yay')
     setShowTap(true)
     
     setTimeout(() => {
     setShowTap(false);
     }, 250);
 
+
     setTimeout(() => {
-      const newAudio = new Audio(url+pitch+'.mp3');
+    
+    if (!beginningBeforeStart){
+       // Play the appropriate piano sound
+      if (pitch === 1) {
+        const highPitchAudio = new Audio('https://syllablepronounciations.s3.us-east-1.amazonaws.com/piano/high_pitch_piano.mp3');
+        highPitchAudio.play();
+      } else {
+        const lowPitchAudio = new Audio('https://syllablepronounciations.s3.us-east-1.amazonaws.com/piano/low_pitch_piano.mp3');
+        lowPitchAudio.play();
+      }
+    } 
+    console.log('uil')
+    console.log(url)
+      console.log(url+pitch+'.mp3')
+      const newAudio = new Audio(url+pitch+'.mp3'); 
+      console.log(newAudio)
+      if ((currentAudioIndex >= fadeStartingIndex)){
+        newAudio.volume = 0
+      }
     setAudio(newAudio);
     newAudio.play();
     newAudio.addEventListener('ended', handleAudioEnd);
@@ -91,8 +138,10 @@ const MusicalNotes = ({ syllables, initialPitches, audioUrls }) => {
   };
 
   const handleAudioEnd = () => {
+    console.log('curr audio:', currentAudioIndex)
     // move to the next audio in the sequence, unless you have reached the last audio
-    if (currentAudioIndex < audioUrls.length - 1 ) {
+    if (currentAudioIndex < audioUrls.length -1) {
+      console.log('i happen')
       setCurrentAudioIndex(currentAudioIndex + 1);
         setShowTap(true)
         
@@ -109,7 +158,7 @@ const MusicalNotes = ({ syllables, initialPitches, audioUrls }) => {
   };
 
   useEffect(() => {
-    if (currentAudioIndex < audioUrls.length ) {
+    if (currentAudioIndex < audioUrls.length) {
       // Only play the next audio if the index is valid
       if (audio) {
         audio.removeEventListener('ended', handleAudioEnd); // Cleanup previous event listener
@@ -134,7 +183,7 @@ const MusicalNotes = ({ syllables, initialPitches, audioUrls }) => {
       <div>
         {/* Single Play/Stop button */}
         <button onClick={handlePlayStop}>
-        {audioSequenceEnded ? 'Play again' : isPlaying ? 'Stop' : 'Continue'}
+        {audioSequenceEnded ? 'Play again' : beginningBeforeStart? 'Start': isPlaying ? 'Stop' : 'Continue'}
         </button>
       </div>
 
@@ -211,8 +260,8 @@ const MusicalNotes = ({ syllables, initialPitches, audioUrls }) => {
       {/* Flashing TAP button */}
       
         <button className="tap-button"  style={{
-        backgroundColor: showTap ? "green" : "white",
-        color: showTap ? "white" : "black", // Optional for text contrast
+        backgroundColor: (showTap && !beginningBeforeStart) ? "green" : "white",
+        color: (showTap && !beginningBeforeStart) ? "white" : "black", // Optional for text contrast
         }}>
           TAP
         </button>
@@ -221,21 +270,21 @@ const MusicalNotes = ({ syllables, initialPitches, audioUrls }) => {
   );
 };
 
-const App = () => {
-  const syllables = ["What's", 'for',"din-","ner?"];
-  const initialPitches = [1, 0,0,1];
-  const audioUrls = [
-    'https://syllablepronounciations.s3.us-east-1.amazonaws.com/audio/hello/syllable_0_',
-    'https://syllablepronounciations.s3.us-east-1.amazonaws.com/audio/hello/syllable_1_',
-    'https://syllablepronounciations.s3.us-east-1.amazonaws.com/audio/hello/syllable_1_',
-    'https://syllablepronounciations.s3.us-east-1.amazonaws.com/audio/hello/syllable_1_'
-  ];
+// const App = () => {
+//   const syllables = ["He-", 'llo'];
+//   const initialPitches = [1, 0];
+//   const audioUrls = [
+//     'https://syllablepronounciations.s3.us-east-1.amazonaws.com/audio/hello/syllable_0_',
+//     'https://syllablepronounciations.s3.us-east-1.amazonaws.com/audio/hello/syllable_1_',
+//     // 'https://syllablepronounciations.s3.us-east-1.amazonaws.com/audio/hello/syllable_1_',
+//     // 'https://syllablepronounciations.s3.us-east-1.amazonaws.com/audio/hello/syllable_1_'
+//   ];
 
-  return (
-    <div>
-      <MusicalNotes syllables={syllables} initialPitches={initialPitches} audioUrls={audioUrls} />
-    </div>
-  );
-};
+//   return (
+//     <div>
+//       <MusicalNotes syllables={syllables} initialPitches={initialPitches} audioUrls={audioUrls} />
+//     </div>
+//   );
+// };
 
-export default App;
+export default MusicalNotes;
