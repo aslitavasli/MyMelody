@@ -593,10 +593,10 @@ const thisLevelExists = async (req, res) => {
       // console.log(res)
       return res.json({category: categoryUnder.name})
     }
-
+ 
     //category doesn't exist
     else {
-    ç
+    
       return (res.json({category: false}))
     }
 
