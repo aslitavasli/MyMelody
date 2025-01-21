@@ -11,7 +11,9 @@ import Carousel from './pages/Carousel.jsx';
 import Notation from './components/Notation.jsx';
 import Menu from './pages/Menu.jsx';
 import PracticeLevels from './pages/PracticeLevels.jsx';
+import Introduction from './pages/Introduction.jsx';
 
+import './styles/styles.css';
 
 axios.defaults.baseURL = "http://localhost:8000";
 axios.defaults.withCredentials = true;
@@ -25,7 +27,7 @@ function App() {
 <>
 
     <Routes>
-    {/* <Route path="/" element={<Welcome />} /> */}
+    <Route path="/" element={<Introduction />} />
     <Route path="/menu" element={<Menu />} />
     <Route path="/createlevel" element={<CreateLevel />} />
     <Route path="/practice" element={<Carousel />} />

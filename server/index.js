@@ -3,9 +3,8 @@ const dotenv = require('dotenv').config()
 const cors = require('cors')
 const routes = require("./routes/Routes"); 
 const mongoose = require('mongoose')
-// const mongoose = require('mongoose')
-// const cookieParser = require('cookie-parser')
-// const jwt = require('jsonwebtoken')
+const fs = require('fs')
+
 
 const app = express();
 const port = 8000;
@@ -15,7 +14,6 @@ const port = 8000;
 mongoose.connect(process.env.MONGO_URL)
 .then(()=> console.log('Database connected'))
 .catch((err) => console.log('error', err))
-
 
 
 //parsing json

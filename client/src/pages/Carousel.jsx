@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import Step0 from './Step0';
-import Step1 from './Step1';
-import Step2 from './Step2';
-import Step3 from './Step3';
-import Step4 from './Step4';
-import Step5 from './Step5';
-import Step6 from './Step6';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+import Step0 from './MIT Steps/Step0';
+import Step1 from './MIT Steps/Step1';
+import Step2 from './MIT Steps/Step2';
+import Step3 from './MIT Steps/Step3';
+import Step4 from './MIT Steps/Step4';
+import Step5 from './MIT Steps/Step5';
+import Step6 from './MIT Steps/Step6';
+import Completed from './MIT Steps/Complete'
 
 const steps = [
   { id: 0, component: (props) => <Step0 {...props} /> }, 
@@ -15,10 +17,12 @@ const steps = [
   { id: 3, component: (props) => <Step3 {...props}/> },
   { id: 4, component: (props) => <Step4 {...props}/> },
   { id: 5, component: (props) => <Step5 {...props}/> },
-  { id: 6, component: () => <Step6 /> },
+  { id: 6, component: (props) => <Step6 {...props}/> },
+  {id:7, component: (props) => <Completed {...props}/>}
 ];
 
 const Carousel = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const [currentStep, setCurrentStep] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -27,6 +31,8 @@ const Carousel = () => {
   const [pitches, setPitches] = useState([]);
   const [phrase, setPhrase] = useState('');
 
+  console.log('pitches in step', currentStep)
+  console.log(pitches)
   useEffect(() => {
     const fetchResponse = async () => {
       if (
@@ -39,6 +45,7 @@ const Carousel = () => {
         setPronounciations(location.state.pronounciations);
         setPitches(location.state.pitches);
         setPhrase(location.state.phrase);
+        
 
         console.log('Location State:', location.state);
       } else {
@@ -68,13 +75,27 @@ const Carousel = () => {
     return <div>Loading...</div>;
   }
 
+
+  const handleGoBack = (e) => {
+    navigate('/menu')
+};
+
   return (
     <div className="carousel-container">
+
+        <div style={{ marginTop: '20px' }}>
+                <button onClick={handleGoBack} style={{ backgroundColor: '#f0f0f0', padding: '10px', border: '1px solid #ccc' }}>
+                    Go Back
+                </button>
+      </div>
+       
       <div className="step-content">
-        {steps[currentStep].id === 0
+        {(steps[currentStep].id === 0)
           ? steps[currentStep].component({ phrase }) // Pass phrase to Step0
           : steps[currentStep].id === 1
           ? steps[currentStep].component({ initialPitches: pitches, updatePitches: updatePitches }) // Pass pitches to Step1
+          : (steps[currentStep].id === 7 && !(!pitches || pitches.length === 0))
+          ? steps[currentStep].component({  pronounciations: pronounciations,  spellings: spellings, pitches: pitches, phrase: phrase }) // Pass pitches to Step1
           : steps[currentStep].component({
             pronounciations: pronounciations,  spellings: spellings, initialPitches: pitches, updatePitches: updatePitches })}
       </div>
