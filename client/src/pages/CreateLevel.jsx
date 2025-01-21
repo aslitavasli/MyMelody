@@ -12,6 +12,10 @@ const CreateLevel = () => {
         setSentence(e.target.value); // Update sentence state on input change
     };
 
+    const handleGoBack = (e) => {
+        navigate('/menu')
+    };
+
     const handleSentenceSubmit = async () => {
         setSubmittedSentence(sentence); // Save submitted sentence
         console.log('Submitted Sentence:', sentence);
@@ -60,7 +64,15 @@ const CreateLevel = () => {
             {apiResponse && (
                 <p><strong>API Response:</strong> {apiResponse}</p>
             )}
+
+            <div style={{ marginTop: '20px' }}>
+                <button onClick={handleGoBack} style={{ backgroundColor: '#f0f0f0', padding: '10px', border: '1px solid #ccc' }}>
+                    Go Back
+                </button>
+            </div>
         </div>
+
+        
     );
 };
 

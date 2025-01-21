@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import MusicalNotes from '../components/Notation'
+import MusicalNotes from '../../components/Notation'
 
 //This step is humming
 const Step3 = ({pronounciations, spellings, initialPitches, updatePitches}) => {

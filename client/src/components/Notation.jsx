@@ -10,9 +10,7 @@ const MusicalNotes = ({ syllables, initialPitches, audioUrls, fading, alone, upd
   const [beginningBeforeStart, setBeginningBeforeStart] = useState(true)
   const [showTap, setShowTap] = useState(false)
   
-  // const pianoHighAudio = new Audio('https://syllablepronounciations.s3.us-east-1.amazonaws.com/piano/high_pitch_piano.mp3');
-  // const pianoLowAudio = new Audio('https://syllablepronounciations.s3.us-east-1.amazonaws.com/piano/low_pitch_piano.mp3');
-  
+
   if (syllables.length !== pitches.length) {
     console.error('Syllables and pitches arrays must have the same length');
     return null;
@@ -173,9 +171,12 @@ const MusicalNotes = ({ syllables, initialPitches, audioUrls, fading, alone, upd
     };
   }, [currentAudioIndex]); // Only listen to changes in currentAudioIndex
 
+
+
   return (
     <div className="musical-notes-container">
       <h1>Musical Notes Visualizer</h1>
+
       <button onClick={() => setIsEditing(!isEditing)}>
         {isEditing ? 'Disable Edit' : 'Enable Edit'}
       </button>
@@ -269,22 +270,5 @@ const MusicalNotes = ({ syllables, initialPitches, audioUrls, fading, alone, upd
     </div>
   );
 };
-
-// const App = () => {
-//   const syllables = ["He-", 'llo'];
-//   const initialPitches = [1, 0];
-//   const audioUrls = [
-//     'https://syllablepronounciations.s3.us-east-1.amazonaws.com/audio/hello/syllable_0_',
-//     'https://syllablepronounciations.s3.us-east-1.amazonaws.com/audio/hello/syllable_1_',
-//     // 'https://syllablepronounciations.s3.us-east-1.amazonaws.com/audio/hello/syllable_1_',
-//     // 'https://syllablepronounciations.s3.us-east-1.amazonaws.com/audio/hello/syllable_1_'
-//   ];
-
-//   return (
-//     <div>
-//       <MusicalNotes syllables={syllables} initialPitches={initialPitches} audioUrls={audioUrls} />
-//     </div>
-//   );
-// };
 
 export default MusicalNotes;

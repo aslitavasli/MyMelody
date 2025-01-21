@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
-import MusicalNotes from '../components/Notation'
+import MusicalNotes from '../../components/Notation'
 
 //This step is humming
-const Step4 = ({pronounciations, spellings, initialPitches, updatePitches}) => {
+const Step5 = ({pronounciations, spellings, initialPitches, updatePitches}) => {
+ 
   const syllables = spellings;
   const pitches = initialPitches;
   const audioUrls = pronounciations
@@ -18,16 +19,16 @@ const Step4 = ({pronounciations, spellings, initialPitches, updatePitches}) => {
 
   return (
     <div className="step">
-      <h2>Step 4: Fading</h2>
+      <h2>Step 5: Alone</h2>
       {/* <img src="/assets/images/step1.png" alt="Step 1 Visual" /> */}
       <p>Step 4</p>
 
       <div>
-      <MusicalNotes syllables={syllables} initialPitches={pitches} audioUrls={audioUrls} fading={true} alone={false} updatePitches={updatePitches}/>
+      <MusicalNotes syllables={syllables} initialPitches={pitches} audioUrls={audioUrls} fading={false} alone={true} updatePitches={updatePitches}/>
     </div>
 
     </div>
   );
 };
 
-export default Step4;
+export default Step5;

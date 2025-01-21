@@ -9,18 +9,18 @@ function Menu() {
               
       {/* Third Division */}
       <div style={{ width: '100%', textAlign: 'center', padding: '20px', border: '1px solid #ccc' }}>
-        <button onClick={() => navigate('/levels')}>Start Practice Levels!</button>
+        <button onClick={() => navigate('/levels')}>View Practice Levels</button>
       </div>
       
-      {/* Second Division */}
-      <div style={{ width: '100%', height: '200px', border: '1px solid #ccc', backgroundColor: '#f0f0f0' }}>
-        {/* Place your image here */}
+       {/* First Division */}
+       <div style={{ width: '100%', textAlign: 'center', padding: '20px', border: '1px solid #ccc' }}>
+        <button onClick={() => navigate('/createlevel')}>Quick Add Levels</button>
       </div>
-      
+  
 
       {/* First Division */}
       <div style={{ width: '100%', textAlign: 'center', padding: '20px', border: '1px solid #ccc' }}>
-        <button onClick={() => navigate('/createlevel')}>Create Your Level!</button>
+        <button onClick={() => navigate('/createlevel')}>Create Your Level </button>
       </div>
   
     </div>

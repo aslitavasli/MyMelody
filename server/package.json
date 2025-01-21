@@ -17,6 +17,7 @@
     "dotenv": "^16.4.7",
     "espeak-ng": "^1.0.2",
     "express": "^4.21.2",
+    "fs": "^0.0.1-security",
     "groq-sdk": "^0.9.1",
     "hyphen": "^1.10.6",
     "mongoose": "^8.9.2",
