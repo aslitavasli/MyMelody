@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -89,61 +89,55 @@ function PracticeLevels() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
+    <div>
       {!selectedCategory && (
-        <div style={{ marginTop: '20px' }}>
-          <button onClick={handleGoBack} style={{ backgroundColor: '#f0f0f0', padding: '10px', border: '1px solid #ccc' }}>
+        <div className='back-button-container-top'>
+          <button onClick={handleGoBack}>
             Go Back
           </button>
         </div>
       )}
 
       {selectedCategory ? (
-        <div style={{ textAlign: 'center' }}>
-          <h2>{selectedCategory.name}</h2>
-          <button onClick={() => setIsModalOpen(true)}>Edit Category</button>
-          <button onClick={openDeleteModal}>Delete Category</button>
-          <div style={{ margin: '20px 0', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div className='category-name-explanation'>
+          <h1>{selectedCategory.name}</h1>
+
+          <div className='single-category-buttons'>
+            <button onClick={() => setIsModalOpen(true)}>Edit Category</button>
+            <button onClick={openDeleteModal}>Delete Category</button>
+          </div>
+
+          <div className='levels-container'>
             {selectedCategory.levels.map((level, index) => (
               <div
                 key={index}
-                style={{
-                  width: '100%',
-                  textAlign: 'center',
-                  padding: '15px',
-                  border: '1px solid #ccc',
-                  backgroundColor: index % 2 === 0 ? '#f7bdff' : '#b6b65b',
-                }}
+                className='tile'
                 onClick={() => handleLevelClick(level)}
               >
-                <h4>"{level.phrase}"</h4>
+                <h4> `{level.phrase}`</h4>
               </div>
             ))}
+            </div>
+        
+          <div className='back-button-container-top'>
+          <button onClick={handleBackToMenu}> Go Back </button>
           </div>
-          <button
-            onClick={handleBackToMenu}
-            style={{ padding: '10px 20px', marginTop: '20px', cursor: 'pointer' }}
-          >
-            Back to Menu
-          </button>
         </div>
       ) : (
-        categories.map((category, index) => (
+       
+          <div className="categories-container">
+        {categories.map((category, index) => (
           <div
+            className="tile"
             key={index}
             onClick={() => handleCategoryClick(category)}
-            style={{
-              width: '100%',
-              textAlign: 'center',
-              padding: '20px',
-              border: '1px solid #ccc',
-              backgroundColor: index % 2 === 0 ? '#f7bdff' : '#b6b65b',
-              cursor: 'pointer',
-            }}
           >
             <h3>{category.name}</h3>
           </div>
-        ))
+        ))}
+      </div>
+
+      
       )}
 
       {/* Modal for Editing Category */}
@@ -160,7 +154,20 @@ function PracticeLevels() {
               type="text"
               value={newCategoryName}
               onChange={(e) => setNewCategoryName(e.target.value)}
-              style={{ padding: '5px', width: '100%', marginBottom: '10px' }}
+              style={{
+                padding: "0.8em 3em",
+                width: "50%",
+                marginBottom: "10px",
+                borderRadius: "2em",
+                border: "none",
+                fontSize: "1rem", 
+                outline: "none",
+                backgroundColor: "#fff", 
+                color: "#000", 
+                boxShadow: "inset 0 0 5px rgba(0, 0, 0, 0.5)", 
+                transition: "all 0.3s ease", 
+                cursor: "pointer", 
+               }}
             />
             <div>
               <button onClick={handleEditCategory} style={{ padding: '8px 15px', marginRight: '10px' }}>Save</button>
@@ -179,7 +186,7 @@ function PracticeLevels() {
           <div style={{
             backgroundColor: 'rgb(0,0,0)', padding: '20px', borderRadius: '8px', textAlign: 'center', width: '300px'
           }}>
-            <h3>Are you sure you want to delete this category?</h3>
+            <h3>Are you sure you want to delete this category? This will also delete all the levels. </h3>
             <div>
               <button onClick={confirmDeleteCategory} style={{ padding: '8px 15px', marginRight: '10px' }}>Yes, Delete</button>
               <button onClick={closeDeleteModal} style={{ padding: '8px 15px' }}>Cancel</button>
