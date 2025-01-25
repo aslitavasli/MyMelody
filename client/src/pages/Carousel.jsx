@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import Step0 from './MIT Steps/Step0';
@@ -31,8 +31,7 @@ const Carousel = () => {
   const [pitches, setPitches] = useState([]);
   const [phrase, setPhrase] = useState('');
 
-  console.log('pitches in step', currentStep)
-  console.log(pitches)
+
   useEffect(() => {
     const fetchResponse = async () => {
       if (
@@ -47,7 +46,7 @@ const Carousel = () => {
         setPhrase(location.state.phrase);
         
 
-        console.log('Location State:', location.state);
+       
       } else {
         console.error('Error: Missing data in location.state');
       }
@@ -61,13 +60,16 @@ const Carousel = () => {
     setCurrentStep((prev) => (prev < steps.length - 1 ? prev + 1 : prev));
   };
 
+  const skipEnd = () => {
+    setCurrentStep(7);
+  };
+
   const prevStep = () => {
     setCurrentStep((prev) => (prev > 0 ? prev - 1 : prev));
   };
 
   const updatePitches = (newPitches) => {
     setPitches(newPitches); // Update the pitches state
-    console.log('Updated Pitches:', newPitches); // Log the updated pitches
   };
 
   
@@ -76,7 +78,7 @@ const Carousel = () => {
   }
 
 
-  const handleGoBack = (e) => {
+  const handleGoBack = () => {
     navigate('/menu')
 };
 
@@ -102,6 +104,7 @@ const Carousel = () => {
       <div className="carousel-controls">
         {currentStep !== 0 && <button onClick={prevStep}>Previous</button>}
         {currentStep !== steps.length - 1 && <button onClick={nextStep}>Next</button>}
+        {currentStep !== 7 && <button onClick={skipEnd}>Skip To End </button>}
       </div>
     </div>
   );

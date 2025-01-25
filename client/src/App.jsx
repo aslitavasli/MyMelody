@@ -1,11 +1,7 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+
 import './App.css'
-import * as Pitchfinder from "pitchfinder";
 import { Routes, Route } from "react-router-dom";
 import axios from "axios";
-
 import CreateLevel from './pages/CreateLevel.jsx';
 import Carousel from './pages/Carousel.jsx';
 import Notation from './components/Notation.jsx';

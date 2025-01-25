@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Modal from "react-modal";
 import axios from 'axios';
 
@@ -25,7 +25,7 @@ const Completed = ({ phrase, pronounciations, spellings, pitches }) => {
         setCategories(response.data.categories || []);
       
       } catch (error) {
-       
+       console.log(error)
       }
     };
     fetchCategories();
@@ -220,7 +220,7 @@ const Completed = ({ phrase, pronounciations, spellings, pitches }) => {
       >
         <h2>Edit Level</h2>
         <div className="modal-body">
-          <h3> Your level is saved in "{levelExistsUnder}": </h3>
+          <h3> Your level is saved in `{levelExistsUnder}`: </h3>
           <label>Change to:</label>
           <select
             value={selectedCategory}

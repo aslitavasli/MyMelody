@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,40 +12,40 @@ const CreateLevel = () => {
         setSentence(e.target.value); // Update sentence state on input change
     };
 
-    const handleGoBack = (e) => {
+    const handleGoBack = () => {
         navigate('/menu')
     };
 
     const handleSentenceSubmit = async () => {
         setSubmittedSentence(sentence); // Save submitted sentence
-        console.log('Submitted Sentence:', sentence);
+        
 
         try {
-            console.log(sentence);
+          
             const response = await axios.get('/api/processSentence', {
                 params: { sentence }
             });
 
             const apiMessage = response.data.message; 
             setApiResponse(apiMessage);
-            console.log('API Response:', response.data);
+           
 
             // Navigate to Carousel page with the API response
             navigate('/practice', { state: { spellings: response.data.spellings, pronounciations: response.data.pronounciations, pitches: response.data.pitches, phrase: sentence }});
         } catch (error) {
-            console.error('Error fetching from API:', error);
+            console.log(error)
             setApiResponse('Failed to fetch API response');
         }
     };
 
     return (
-        <div>
-            <h2>Create Your Own Level</h2>
+        <div className="create-level-container">
+            <h1>Create Your Own Level</h1>
 
             {/* Sentence Input Section */}
-            <div style={{ marginTop: '20px' }}>
-                <h3>Type a Sentence</h3>
-                <input 
+            <div className="input-section">
+                <h3>Type a sentence in English! </h3>
+                <input className='input-bar'
                     type="text" 
                     value={sentence} 
                     onChange={handleSentenceChange} 
@@ -57,7 +57,7 @@ const CreateLevel = () => {
 
             {/* Display Submitted Sentence */}
             {submittedSentence && (
-                <p><strong>Submitted Sentence:</strong> {submittedSentence}</p>
+                <p className="submitted-sentence"><strong>Submitted Sentence:</strong> {submittedSentence}</p>
             )}
 
             {/* Display API Response */}
@@ -65,8 +65,8 @@ const CreateLevel = () => {
                 <p><strong>API Response:</strong> {apiResponse}</p>
             )}
 
-            <div style={{ marginTop: '20px' }}>
-                <button onClick={handleGoBack} style={{ backgroundColor: '#f0f0f0', padding: '10px', border: '1px solid #ccc' }}>
+            <div className="back-button-container">
+                <button onClick={handleGoBack}>
                     Go Back
                 </button>
             </div>
