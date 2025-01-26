@@ -1,13 +1,12 @@
 const express = require('express');
 const dotenv = require('dotenv').config();
 const cors = require('cors');
-const routes = require('./routes/Routes');
+const routes = require('./routes/routes');
 const mongoose = require('mongoose');
-const fs = require('fs');
 
 const app = express();
 
-// Use the PORT environment variable or a default value (e.g., 8000) for local development
+// Use dynamic port for Render, fallback for local development
 const port = process.env.PORT || 8000;
 
 // Database connection
@@ -24,10 +23,11 @@ app.use(cors());
 // Routes
 app.use('/', routes);
 
+
 // Static file serving
 app.use('/assets', express.static('assets'));
 
-// Start the server and bind to 0.0.0.0 for deployment compatibility
+// Start the server and bind to 0.0.0.0
 app.listen(port, '0.0.0.0', () => {
-  console.log(`Server is running on port ${port} :)`);
+  console.log(`Server is running on port ${port}`);
 });
