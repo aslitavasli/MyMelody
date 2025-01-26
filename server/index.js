@@ -5,6 +5,7 @@ const routes = require('./routes/routes');
 const mongoose = require('mongoose');
 
 const app = express();
+app.use(cors());
 
 // Use dynamic port for Render, fallback for local development
 const port = process.env.PORT || 8000;
@@ -22,12 +23,6 @@ app.use(express.urlencoded({ extended: false }));
 
 // Routes
 app.use('/', routes);
-
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "https://mymelody-3sak.onrender.com/"); 
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
 
 // Start the server and bind to 0.0.0.0
 app.listen(port, '0.0.0.0', () => {
