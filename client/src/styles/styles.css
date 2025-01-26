@@ -636,8 +636,14 @@
   padding: 10px 20px;
   margin: 10px;
   font-size: 16px;
+  background-color: #000;
+  color: rgb(255, 255, 255);
   border: 2px solid black;
   border-radius: 5px;
+}
+
+.edit-button,
+.play-button {
   cursor: pointer;
 }
 
@@ -671,6 +677,8 @@
 .skip-button-container button{
   font-style: italic;
   text-decoration: underline;
+  background-color: #000;
+  color: rgb(255, 255, 255);
   background-color: transparent;
   position: absolute;
   bottom: 10px; 
