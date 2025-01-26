@@ -9,8 +9,6 @@ const Category = require('../models/category')
 const Level = require('../models/level')
 
 const { PollyClient, SynthesizeSpeechCommand } = require('@aws-sdk/client-polly'); 
-const { eventNames } = require('process');
-const category = require('../models/category');
 
 
 const isLoaded = false
