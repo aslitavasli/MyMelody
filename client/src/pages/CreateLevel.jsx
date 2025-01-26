@@ -97,7 +97,7 @@ const CreateLevel = () => {
                     style={{ marginRight: '10px' }}
                 />
                 <button onClick={handleSentenceSubmit}>Submit</button>
-                <h4>For MIT purposes, your sentence should be around 2-7 syllables. This version of MyMelody doesn't support words that don't exist in the Oxford Dictionary (like names)!</h4>
+                <h4>For MIT purposes, your sentence should be around 2-7 syllables. This version of MyMelody doesn't support words that don't exist in the Oxford Dictionary (like names or plurals)!</h4>
             </div>
 
             {/* Display Validation Error */}
