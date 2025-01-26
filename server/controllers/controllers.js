@@ -690,6 +690,9 @@ const deleteLevel = async (req,res) =>{
 
   const level = await Level.findOne({phrase: phrase}); // Find and delete the level by ID
 
+  if (!level){
+    res.json({ message: 'Level deleted successfully.' });
+  }
   try {
 
     await Category.findOneAndUpdate(
