@@ -73,8 +73,11 @@ const handleSentence = async (req, res) => {
       for (const word of words) {
           currWord = await processword(word)
             if (currWord == false){
-              console.log('at least i happen')
-              return res.json({error: 'Could not load the level, please make sure you have entered words that exist in the dictionary and try again.'})
+                attempt2 = await processword(word)
+                if (!attempt2){
+                  return res.json({error: 'Could not load the level, please make sure you have entered words that exist in the dictionary and try again.'})
+                }
+                currWord = attempt2;
             }
           for (i = 0; i< currWord.audioData.length; i++){
           pronounciations.push(currWord.audioData[i])
