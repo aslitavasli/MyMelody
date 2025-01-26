@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
+/************** This component is for creating the "note notation" with spelled out syllables. 
+ * This aims to help the user navigate the pitches. It gets the syllables array list,
+ * pitches array list, audioURLS and 3 settings to adjust for different steps of the therapy:
+ * - fully singing, -fading, -alone. The user can also update the pitches how they want.
+ */
+
 const MusicalNotes = ({ syllables, initialPitches, audioUrls, fading, alone, updatePitches }) => {
   const [pitches, setPitches] = useState(initialPitches);
   const [isEditing, setIsEditing] = useState(false);
@@ -16,6 +22,7 @@ const MusicalNotes = ({ syllables, initialPitches, audioUrls, fading, alone, upd
     return null;
   }
 
+  //determine from when the fading will start
   if (fading){
     var fadeStartingIndex = Math.ceil(syllables.length / 2);
   }
@@ -27,10 +34,11 @@ const MusicalNotes = ({ syllables, initialPitches, audioUrls, fading, alone, upd
   const svgWidth = 50 + syllables.length * 100;
   const svgHeight =  50 + syllables.length * 30;
 
+  //this is for updating the pitches
   const togglePitch = (index) => {
-    if (!isEditing) return; // Only toggle pitch if editing mode is active
+    if (!isEditing) return; // only toggle pitch if editing mode is active
     const newPitches = [...pitches];
-    newPitches[index] = newPitches[index] === 1 ? 0 : 1; // Toggle between high (1) and low (0)
+    newPitches[index] = newPitches[index] === 1 ? 0 : 1; // toggle between high (1) and low (0)
     updatePitches(newPitches)
     setPitches(newPitches);
   };
@@ -100,7 +108,7 @@ const MusicalNotes = ({ syllables, initialPitches, audioUrls, fading, alone, upd
   };
 
   const playAudioSequence = (url, pitch) => {
-    console.log('yay')
+
     setShowTap(true)
     
     setTimeout(() => {
@@ -111,7 +119,7 @@ const MusicalNotes = ({ syllables, initialPitches, audioUrls, fading, alone, upd
     setTimeout(() => {
     
     if (!beginningBeforeStart){
-       // Play the appropriate piano sound
+       // play the appropriate piano sound
       if (pitch === 1) {
         const highPitchAudio = new Audio('https://syllablepronounciations.s3.us-east-1.amazonaws.com/piano/high_pitch_piano.mp3');
         highPitchAudio.play();
@@ -120,27 +128,24 @@ const MusicalNotes = ({ syllables, initialPitches, audioUrls, fading, alone, upd
         lowPitchAudio.play();
       }
     } 
-    console.log('uil')
-    console.log(url)
-      console.log(url+pitch+'.mp3')
+      //create the audio of the syllable you are going to get
       const newAudio = new Audio(url+pitch+'.mp3'); 
-      console.log(newAudio)
       if ((currentAudioIndex >= fadeStartingIndex)){
         newAudio.volume = 0
       }
     setAudio(newAudio);
     newAudio.play();
     newAudio.addEventListener('ended', handleAudioEnd);
-    }, 100); // CHANGE SETTINGS
+    }, 100); 
 
     
   };
 
   const handleAudioEnd = () => {
-    console.log('curr audio:', currentAudioIndex)
+   
     // move to the next audio in the sequence, unless you have reached the last audio
     if (currentAudioIndex < audioUrls.length -1) {
-      console.log('i happen')
+     
       setCurrentAudioIndex(currentAudioIndex + 1);
         setShowTap(true)
         
@@ -158,19 +163,19 @@ const MusicalNotes = ({ syllables, initialPitches, audioUrls, fading, alone, upd
 
   useEffect(() => {
     if (currentAudioIndex < audioUrls.length) {
-      // Only play the next audio if the index is valid
+      // only play the next audio if the index is valid
       if (audio) {
-        audio.removeEventListener('ended', handleAudioEnd); // Cleanup previous event listener
+        audio.removeEventListener('ended', handleAudioEnd); // cleanup previous event listener
       }
       playAudioSequence(audioUrls[currentAudioIndex], pitches[currentAudioIndex]);
     }
 
     return () => {
       if (audio) {
-        audio.removeEventListener('ended', handleAudioEnd); // Cleanup event listener
+        audio.removeEventListener('ended', handleAudioEnd); // cleanup event listener
       }
     };
-  }, [currentAudioIndex]); // Only listen to changes in currentAudioIndex
+  }, [currentAudioIndex]); // listen to changes in currentAudioIndex
 
 
 
@@ -241,7 +246,7 @@ const MusicalNotes = ({ syllables, initialPitches, audioUrls, fading, alone, upd
             if (!audioSequenceEnded && !beginningBeforeStart) {
               color = '#38ed83';
             } else if (beginningBeforeStart) {
-              color = 'white'; // Explicitly set white when at the beginning before start
+              color = 'white'; // explicitly set white when at the beginning before start
             }
           }
 
