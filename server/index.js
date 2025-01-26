@@ -23,10 +23,11 @@ app.use(express.urlencoded({ extended: false }));
 // Routes
 app.use('/', routes);
 
-app.use(cors());
-
-// Static file serving
-app.use('/assets', express.static('assets'));
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "YOUR-DOMAIN.TLD"); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 // Start the server and bind to 0.0.0.0
 app.listen(port, '0.0.0.0', () => {
