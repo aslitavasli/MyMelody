@@ -6,7 +6,7 @@ const {test, processword, handleSentence, getCategories, saveLevel, saveLevelAnd
 router.use(
   cors({
     credentials: true,
-    origin: "http://localhost:5173"
+    origin: "https://mymelody-3sak.onrender.com"
   })
 );
 

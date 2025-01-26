@@ -11,7 +11,7 @@ import Introduction from './pages/Introduction.jsx';
 
 import './styles/styles.css';
 
-axios.defaults.baseURL = "http://localhost:8000";
+axios.defaults.baseURL = "https://mymelodybackend.onrender.com";
 axios.defaults.withCredentials = true;
 
 // const mic = require('mic');
