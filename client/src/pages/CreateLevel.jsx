@@ -58,33 +58,28 @@ const CreateLevel = () => {
 
         setSubmittedSentence(sentence); // Save submitted sentence
 
-        var currAttempt = 0;
-        const maxAttempt = 3;
-        while(currAttempt < maxAttempt){
-            try {
-                const response = await axios.get('/api/processSentence', {
-                    params: { sentence }
+        try {
+            const response = await axios.get('/api/processSentence', {
+                params: { sentence }
+            });
+
+            if (!response.data.error) {
+                // Navigate to Carousel page with the API response
+                navigate('/practice', { 
+                    state: { 
+                        spellings: response.data.spellings, 
+                        pronounciations: response.data.pronounciations, 
+                        pitches: response.data.pitches, 
+                        phrase: sentence 
+                    }
                 });
-
-                if (!response.data.error) {
-                    // Navigate to Carousel page with the API response
-                    navigate('/practice', { 
-                        state: { 
-                            spellings: response.data.spellings, 
-                            pronounciations: response.data.pronounciations, 
-                            pitches: response.data.pitches, 
-                            phrase: sentence 
-                        }
-                    });
-                } else {
-                   currAttempt++;
-                }
-            } catch (error) {
-                currAttempt++;
+            } else {
+                setError(response.data.error);
             }
+        } catch (error) {
+            console.log(error);
+            setError("An error occurred, please try again (or another sentence)!");
         }
-
-        setError("An error occurred, please try again (or another sentence)!");
     };
 
     return (
