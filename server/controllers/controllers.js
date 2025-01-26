@@ -705,7 +705,7 @@ const deleteLevel = async (req,res) =>{
     res.json({ message: 'Level deleted successfully' }); // Return success response
   } catch (error) {
     console.log(error)
-    res.status(500).json({ error: 'Error deleting level'}); // Return error response
+    res.status(500).json({ error: error}); // Return error response
   }
 }
 module.exports = {
