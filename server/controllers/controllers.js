@@ -700,12 +700,12 @@ const deleteLevel = async (req,res) =>{
     result = await Level.findByIdAndDelete(level._id);
     
     if (!result) {
-      return res.json({ error: 'Level not found' }); // Return 404 if no level was found
+      return res.json({ error: 'Level not found' }); // Return 404git p if no level was found
     }
     res.json({ message: 'Level deleted successfully' }); // Return success response
   } catch (error) {
     console.log(error)
-    res.status(500).json({ error: error}); // Return error response
+    res.status(500).json({ error: `the error is ${error} `}); // Return error response
   }
 }
 module.exports = {
