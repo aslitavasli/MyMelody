@@ -25,7 +25,7 @@ app.use('/', routes);
 
 app.use(cors({
   origin: "https://mymelody-3sak.onrender.com",
-  credentials: true,
+  credentials: false,
   methods: ["GET", "POST", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));

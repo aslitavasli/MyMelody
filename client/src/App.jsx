@@ -12,7 +12,7 @@ import Introduction from './pages/Introduction.jsx';
 import './styles/styles.css';
 
 axios.defaults.baseURL = "https://mymelodybackend.onrender.com";
-axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = false;
 
 // const mic = require('mic');
 
