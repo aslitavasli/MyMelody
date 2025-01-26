@@ -690,6 +690,7 @@ const deleteLevel = async (req,res) =>{
 
   if (!level){
     res.json({ message: 'Level deleted successfully.' });
+    return
   }
   try {
 
