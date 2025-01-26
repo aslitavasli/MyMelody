@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const cors = require("cors");
 const {test, processword, handleSentence, getCategories, saveLevel, saveLevelAndCategory, thisLevelExists, changeLevelCategory, getCategoryNames, deleteCategory, changeCategoryName, deleteLevel} = require('../controllers/controllers')
 
 

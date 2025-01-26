@@ -23,12 +23,7 @@ app.use(express.urlencoded({ extended: false }));
 // Routes
 app.use('/', routes);
 
-app.use(cors({
-  origin: "https://mymelody-3sak.onrender.com",
-  credentials: false,
-  methods: ["GET", "POST", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-}));
+app.use(cors());
 
 // Static file serving
 app.use('/assets', express.static('assets'));
