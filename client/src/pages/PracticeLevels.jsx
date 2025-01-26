@@ -91,7 +91,7 @@ function PracticeLevels() {
   return (
     <div>
       {!selectedCategory && (
-        <div className='back-button-container-top'>
+        <div className='back-button-container-top-categories'>
           <button onClick={handleGoBack}>
             Go Back
           </button>
@@ -100,6 +100,7 @@ function PracticeLevels() {
 
       {selectedCategory ? (
         <div className='category-name-explanation'>
+          
           <h1>{selectedCategory.name}</h1>
 
           <div className='single-category-buttons'>
@@ -111,7 +112,7 @@ function PracticeLevels() {
             {selectedCategory.levels.map((level, index) => (
               <div
                 key={index}
-                className='tile'
+                className='tile-levels'
                 onClick={() => handleLevelClick(level)}
               >
                 <h4> `{level.phrase}`</h4>
@@ -119,12 +120,13 @@ function PracticeLevels() {
             ))}
             </div>
         
-          <div className='back-button-container-top'>
+          <div className='back-button-container-top-categories'>
           <button onClick={handleBackToMenu}> Go Back </button>
           </div>
         </div>
       ) : (
-       
+        <div>
+          <h1 className='categories-title'> Categories </h1>
           <div className="categories-container">
         {categories.map((category, index) => (
           <div
@@ -136,7 +138,7 @@ function PracticeLevels() {
           </div>
         ))}
       </div>
-
+      </div>
       
       )}
 

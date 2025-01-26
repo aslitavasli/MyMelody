@@ -25,6 +25,7 @@ const MusicalNotes = ({ syllables, initialPitches, audioUrls, fading, alone, upd
   }
 
   const svgWidth = 50 + syllables.length * 100;
+  const svgHeight =  50 + syllables.length * 30;
 
   const togglePitch = (index) => {
     if (!isEditing) return; // Only toggle pitch if editing mode is active
@@ -174,21 +175,21 @@ const MusicalNotes = ({ syllables, initialPitches, audioUrls, fading, alone, upd
 
 
   return (
+    <div className='test'>
     <div className="musical-notes-container">
-      <h1>Musical Notes Visualizer</h1>
-
+      
+      <div className='musical-notes-buttons'>
       <button onClick={() => setIsEditing(!isEditing)}>
         {isEditing ? 'Disable Edit' : 'Enable Edit'}
       </button>
-
-      <div>
+      
         {/* Single Play/Stop button */}
         <button onClick={handlePlayStop}>
         {audioSequenceEnded ? 'Play again' : beginningBeforeStart? 'Start': isPlaying ? 'Stop' : 'Continue'}
         </button>
       </div>
-
-      <svg className="musical-staff" viewBox={`0 0 ${svgWidth} 200`}>;
+      </div>
+      <svg className="musical-staff" viewBox={`0 0 ${svgWidth} ${svgHeight}`}>;
         {/* Draw connecting lines */}
         {syllables.map((_, index) => {
 
@@ -197,7 +198,7 @@ const MusicalNotes = ({ syllables, initialPitches, audioUrls, fading, alone, upd
           var color = 'white'
           if (isCurrentNote) {
             if (!audioSequenceEnded && !beginningBeforeStart) {
-              color = 'green';
+              color = '#38ed83';
             } else if (beginningBeforeStart) {
               color = 'white'; 
             }
@@ -238,7 +239,7 @@ const MusicalNotes = ({ syllables, initialPitches, audioUrls, fading, alone, upd
          
           if (isCurrentNote) {
             if (!audioSequenceEnded && !beginningBeforeStart) {
-              color = 'green';
+              color = '#38ed83';
             } else if (beginningBeforeStart) {
               color = 'white'; // Explicitly set white when at the beginning before start
             }
@@ -261,12 +262,13 @@ const MusicalNotes = ({ syllables, initialPitches, audioUrls, fading, alone, upd
       {/* Flashing TAP button */}
       
         <button className="tap-button"  style={{
-        backgroundColor: (showTap && !beginningBeforeStart) ? "green" : "white",
+        backgroundColor: (showTap && !beginningBeforeStart) ? "#38ed83" : "white",
         color: (showTap && !beginningBeforeStart) ? "white" : "black", // Optional for text contrast
         }}>
-          TAP
+          TAP YOUR DESK
         </button>
      
+   
     </div>
   );
 };

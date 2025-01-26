@@ -159,102 +159,102 @@ const Completed = ({ phrase, pronounciations, spellings, pitches }) => {
   };
 
   if (loading){
-    console.log('i happennnnnn load')
+   
     return <div>loading...</div>
   }
 
   return (
-    <div className="step">
+    <div className="complete-carousel">
       <h2>Congratulations! You can now say the phrase: </h2>
       <p>{phrase}</p>
       <button onClick={(isLevelSaved || levelExists) ? openEditModal : openSaveModal}> {(levelExists ||isLevelSaved) ? "Edit this Level" : "Save this Level"}</button>
 
       <Modal
-        isOpen={isSaveModalOpen}
-        onRequestClose={closeSaveModal}
-        contentLabel="Save Level Modal"
-        className="modal-content"
-        overlayClassName="modal-overlay"
-      >
-        <h2>Save Level</h2>
-        <div className="modal-body">
-          <label>Select an existing category:</label>
-          <select
-            value={selectedCategory}
-            onChange={handleCategoryChange}
-            disabled={newCategory.trim() !== ""}
-          >
-            <option value="">-- Choose a category --</option>
-            {categories.map((category, index) => (
-              <option key={index} value={category || "Unnamed Category"}>
-                {category || "Unnamed Category"}
-              </option>
-            ))}
-          </select>
+  isOpen={isSaveModalOpen}
+  onRequestClose={closeSaveModal}
+  contentLabel="Save Level Modal"
+  className="modal-content popup-style"
+  overlayClassName="modal-overlay"
+>
+  <h2>Save Level</h2>
+  <div className="modal-body">
+    <label>Select an existing category:</label>
+    <select
+      value={selectedCategory}
+      onChange={handleCategoryChange}
+      disabled={newCategory.trim() !== ""}
+    >
+      <option value="">-- Choose a category --</option>
+      {categories.map((category, index) => (
+        <option key={index} value={category || "Unnamed Category"}>
+          {category || "Unnamed Category"}
+        </option>
+      ))}
+    </select>
 
-          <div className="divider">or</div>
+    <div className="divider">or</div>
 
-          <label>Create a new category:</label>
-          <input
-            type="text"
-            value={newCategory}
-            onChange={handleNewCategoryChange}
-            placeholder="Enter new category name"
-            disabled={selectedCategory.trim() !== ""}
-          />
-        </div>
+    <label>Create a new category:</label>
+    <input
+      type="text"
+      value={newCategory}
+      onChange={handleNewCategoryChange}
+      placeholder="Enter new category name"
+      disabled={selectedCategory.trim() !== ""}
+    />
+  </div>
 
-        <div className="modal-footer">
-          <button onClick={saveLevel}>Save</button>
-          <button onClick={closeSaveModal}>Cancel</button>
-        </div>
-      </Modal>
+  <div className="modal-footer">
+    <button onClick={saveLevel}>Save</button>
+    <button onClick={closeSaveModal}>Cancel</button>
+  </div>
+</Modal>
 
+<Modal
+  isOpen={isEditModalOpen}
+  onRequestClose={closeEditModal}
+  contentLabel="Edit Level Modal"
+  className="modal-content popup-style"
+  overlayClassName="modal-overlay"
+>
+  <h2>Edit Level</h2>
+  <div className="modal-body">
+    <h3>Your level is saved in `{levelExistsUnder}`:</h3>
+    <label>Change to:</label>
+    <select
+      value={selectedCategory}
+      onChange={handleCategoryChange}
+      disabled={newCategory.trim() !== ""}
+    >
+      <option value="">-- Choose a category --</option>
+      {categories
+        .filter((category) => category !== levelExistsUnder)
+        .map((category, index) => (
+          <option key={index} value={category || "Unnamed Category"}>
+            {category || "Unnamed Category"}
+          </option>
+        ))}
+    </select>
 
-      <Modal
-        isOpen={isEditModalOpen}
-        onRequestClose={closeEditModal}
-        contentLabel="Edit Level Modal"
-        className="modal-content"
-        overlayClassName="modal-overlay"
-      >
-        <h2>Edit Level</h2>
-        <div className="modal-body">
-          <h3> Your level is saved in `{levelExistsUnder}`: </h3>
-          <label>Change to:</label>
-          <select
-            value={selectedCategory}
-            onChange={handleCategoryChange}
-            disabled={newCategory.trim() !== ""}
-          >
-           <option value="">-- Choose a category --</option>
-          {categories
-            .filter((category) => category !== levelExistsUnder) // Filter out the category matching 'a'
-            .map((category, index) => (
-              <option key={index} value={category || "Unnamed Category"}>
-                {category || "Unnamed Category"}
-              </option>
+    <div className="divider">or</div>
 
-            ))}
-          </select>
+    <label>Create a new category to save in:</label>
+    <input
+      className="modal-input"
+      type="text"
+      value={newCategory}
+      onChange={handleNewCategoryChange}
+      placeholder="Enter new category name"
+      disabled={selectedCategory.trim() !== ""}
+    />
+  </div>
 
-          <div className="divider">or</div>
+  <div className="modal-footer">
+    <button className="save" onClick={editLevel}>Save</button>
+    <button onClick={closeEditModal}>Cancel</button>
+  </div>
+</Modal>
 
-          <label>Create a new category to save in:</label>
-          <input
-            type="text"
-            value={newCategory}
-            onChange={handleNewCategoryChange}
-            placeholder="Enter new category name"
-            disabled={selectedCategory.trim() !== ""}
-          />
-        </div>
-
-        <div className="modal-footer">
-          <button onClick={editLevel}>Save</button>
-          <button onClick={closeEditModal}>Cancel</button>
-        </div>
-      </Modal>
 
     </div>
   );

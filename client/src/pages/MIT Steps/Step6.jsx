@@ -5,9 +5,9 @@ const Step6 = ({phrase}) => {
 
 
   return (
-    <div className="step">
+    <div className="step0-6-carousel">
       <h2>What did you say?</h2>
-      {/* <img src="/assets/images/step1.png" alt="Step 1 Visual" /> */}
+  
       <p>{phrase}</p>
 
     </div>

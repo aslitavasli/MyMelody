@@ -72,7 +72,10 @@ const handleSentence = async (req, res) => {
 
       for (const word of words) {
           currWord = await processword(word)
-
+            if (currWord == false){
+              console.log('at least i happen')
+              return res.json({error: 'Could not load the level, please make sure you have entered words that exist in the dictionary and try again.'})
+            }
           for (i = 0; i< currWord.audioData.length; i++){
           pronounciations.push(currWord.audioData[i])
           }
@@ -88,7 +91,9 @@ const handleSentence = async (req, res) => {
     //also in handleSentence, we have to determine a way of which is high which is low 
     //breakSentenceIntoSyllables
     //return each word and 0-1 indicating high & low
-
+      if (pitches.length == 0){
+        res.json({error: 'Could not load the level, please try again.'})
+      }
       return res.json({pronounciations, spellings, pitches})
     } catch (error){
       res.json({error: 'Could not load the level, please try again.'})
@@ -291,7 +296,7 @@ const processword = async (word) => {
     
     Word.deleteOne({word})
     console.log('error!')
-    throw Error
+    return false;
   }
   
 }
@@ -630,22 +635,28 @@ const changeLevelCategory = async (req, res) =>{
 
     //RETURN NAME?
   }
+    if (oldCategory){
+    await oldCategory.populate('levels');
 
-  await oldCategory.populate('levels');
-
-  // Filter based on the phrase
-  oldCategory.levels = oldCategory.levels.filter(
-    (aLevel) => aLevel.phrase !== level.phrase
-  );
-  
-  await oldCategory.save();
-  return res.json({message: "Success!"})
+    // Filter based on the phrase
+    oldCategory.levels = oldCategory.levels.filter(
+      (aLevel) => aLevel.phrase !== level.phrase
+    );
+    
+    await oldCategory.save();
+    return res.json({message: "Success!"})
+  }
 }
 
 const deleteCategory = async (req, res) => {
   try{
    
     const categoryToDelete  = req.body.delete;
+
+    for (const levelId of categoryToDelete.levels) {
+      await Level.findByIdAndDelete(levelId);
+    }
+
     await Category.findByIdAndDelete(categoryToDelete._id)
     res.json({message: "Category deleted successfully!"})
   }
@@ -671,5 +682,28 @@ const changeCategoryName = async (req, res) => {
    res.json({message: "Category updated successfully!"})
 }
 
+const deleteLevel = async (req,res) =>{
+  const { phrase } = req.params; // Get the level ID from the request parameters
+
+  const level = await Level.findOne({phrase: phrase}); // Find and delete the level by ID
+
+  try {
+
+    await Category.findOneAndUpdate(
+      { levels: level._id }, // Find the category containing the level
+      { $pull: { levels: level._id } } // Remove the `exists` value from the `levels` array
+    );
+    
+    result = await Level.findByIdAndDelete(level._id);
+    
+    if (!result) {
+      return res.json({ error: 'Level not found' }); // Return 404 if no level was found
+    }
+    res.json({ message: 'Level deleted successfully' }); // Return success response
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ error: 'Error deleting level'}); // Return error response
+  }
+}
 module.exports = {
-    test, processword, handleSentence, saveLevel, getCategories, getCategoryNames, saveLevelAndCategory, thisLevelExists, changeLevelCategory, deleteCategory, changeCategoryName}
+    test, processword, handleSentence, saveLevel, getCategories, getCategoryNames, saveLevelAndCategory, thisLevelExists, changeLevelCategory, deleteCategory, changeCategoryName, deleteLevel}
