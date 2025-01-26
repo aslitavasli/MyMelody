@@ -3,14 +3,6 @@ const router = express.Router();
 const cors = require("cors");
 const {test, processword, handleSentence, getCategories, saveLevel, saveLevelAndCategory, thisLevelExists, changeLevelCategory, getCategoryNames, deleteCategory, changeCategoryName, deleteLevel} = require('../controllers/controllers')
 
-router.use(
-  cors({
-    credentials: true,
-    origin: "https://mymelody-3sak.onrender.com",
-    methods: ["GET", "POST", "DELETE", "OPTIONS"], // Allowed methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
-  })
-);
 
 /********************* USER SYSTEM *****************/
 router.get("/test", test);
