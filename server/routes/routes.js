@@ -6,9 +6,13 @@ const {test, processword, handleSentence, getCategories, saveLevel, saveLevelAnd
 router.use(
   cors({
     credentials: true,
-    origin: "https://mymelody-3sak.onrender.com"
+    origin: "https://mymelody-3sak.onrender.com",
+    methods: ["GET", "POST", "DELETE", "OPTIONS"], // Allowed methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
   })
 );
+
+router.options("*", cors());
 
 /********************* USER SYSTEM *****************/
 router.get("/test", test);
