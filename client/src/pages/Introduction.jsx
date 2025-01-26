@@ -35,7 +35,7 @@ const Introduction = () => {
                     <div className="step-number">01</div>
                     <div className="step-content">
                         <h2>Hum</h2>
-                        <p>You can describe the topic of the section here</p>
+                        <p>Begin with humming a simple melody. This step helps activate the musical areas of the brain and prepares the individual for vocalization.</p>
                     </div>
                     </div>
 
@@ -43,7 +43,7 @@ const Introduction = () => {
                     <div className="step-number">02</div>
                     <div className="step-content">
                         <h2>Unison Tap</h2>
-                        <p>You can describe the topic of the section here</p>
+                        <p>Sing or speak in unison with the therapist while tapping a rhythm. This combines melody and rhythm to build a foundation for speech.</p>
                     </div>
                     </div>
 
@@ -51,7 +51,7 @@ const Introduction = () => {
                     <div className="step-number">03</div>
                     <div className="step-content">
                         <h2>Fading</h2>
-                        <p>You can describe the topic of the section here</p>
+                        <p>Gradually reduce your vocal support, encouraging the patient to produce the words or phrases more independently.</p>
                     </div>
                     </div>
 
@@ -59,7 +59,7 @@ const Introduction = () => {
                     <div className="step-number">04</div>
                     <div className="step-content">
                         <h2>Alone</h2>
-                        <p>You can describe the topic of the section here</p>
+                        <p>The individual practices speaking or singing the phrase independently, reinforcing their ability to use speech without assistance.</p>
                     </div>
                     </div>
 

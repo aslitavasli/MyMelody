@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const cors = require("cors");
-const {test, processword, handleSentence, getCategories, saveLevel, saveLevelAndCategory, thisLevelExists, changeLevelCategory, getCategoryNames, deleteCategory, changeCategoryName} = require('../controllers/controllers')
+const {test, processword, handleSentence, getCategories, saveLevel, saveLevelAndCategory, thisLevelExists, changeLevelCategory, getCategoryNames, deleteCategory, changeCategoryName, deleteLevel} = require('../controllers/controllers')
 
 router.use(
   cors({
@@ -34,5 +34,7 @@ router.post('/api/changeLevelCategory', changeLevelCategory)
 router.delete('/api/deleteCategory', deleteCategory)
 
 router.post('/api/changeCategoryName', changeCategoryName)
+
+router.delete(`/api/deleteLevel/:phrase`, deleteLevel)
 
 module.exports = router;

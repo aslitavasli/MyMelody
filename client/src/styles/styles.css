@@ -189,9 +189,10 @@
   background: transparent;
   color: #ffffff;
   border: 2px solid #ffffff;
-  border-radius: 50%;
+  border-radius: 30%;
   width: 3rem;
   height: 3rem;
+  padding: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -206,7 +207,7 @@
 .step-content p {
   margin: 0;
   font-size: 1rem;
-  color: #DADADA;
+  color: #fbfbfb;
 }
 
 .demo-left {
@@ -465,22 +466,43 @@
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
+.categories-title{
+  font-family: 'Outfit', sans-serif;
+}
 
 .tile{
   background-color: #f9f9f9;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
-  margin: 15%;
+  cursor: pointer;
+  width: 80%; 
+  aspect-ratio: 6 / 1; 
+  margin: 50px;
+  font-family: "Outfit", serif;
+  color: #000;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.tile-levels{
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin: 50px;
   cursor: pointer;
   width: 80%;
-  height: 40%;
+  aspect-ratio: 6 / 1; 
   font-family: "Outfit", serif;
   color: #000;
   transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .tile:hover{
+  transform: scale(1.2);
+}
+
+.tile-levels:hover{
   transform: scale(1.2);
 }
 
@@ -492,7 +514,7 @@
   flex-direction: column;
   border-radius: 0.7em;
   background: #c57cbe;
-  height: 70vh;
+  height: 85vh;
 
 }
 
@@ -509,11 +531,10 @@
   grid-template-columns: repeat(2, 1fr); 
   flex-direction: row;
   align-items: center;
-  height: 20vh;
+  height: 40vh;
   width: 90vw;
   border-radius: 0.7em;
-  position: relative;
-  gap: 1em; 
+  position: relative; 
   padding: 1em;
   overflow-y: auto; 
   scrollbar-width: thin; 
@@ -570,4 +591,300 @@
 
 .edit-modal-content button:last-child {
   margin-right: 0;
+}
+
+
+
+/************* carousel **************/
+
+.carousel-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+  height: 70vh;
+  width: 90vw;
+  border-radius: 0.7em;
+  background: #b082f6;
+  position: relative;
+}
+
+.step {
+  text-align: center;
+  font-family: 'Outfit', sans-serif;
+}
+
+
+.step h2{
+  color: #ffffff;
+  border-radius: 20%;
+  font-size: 2.3rem;
+  margin-bottom: 10%;
+}
+
+.step p{
+  color: #ffffff;
+  font-size: 1.2em;
+
+} 
+
+
+.edit-button,
+.play-button,
+.tap-button {
+  padding: 10px 20px;
+  margin: 10px;
+  font-size: 16px;
+  border: 2px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.musical-staff {
+
+  width: 70vh;
+  align-items: center;
+}
+
+.note {
+  cursor: pointer;
+}
+
+.note:hover {
+  stroke: black;
+  stroke-width: 1;
+}
+
+.tap-button {
+ 
+  font-weight: bold;
+}
+
+.skip-button-container{
+  position: absolute;
+  bottom: 10px; 
+  right: 10px; 
+  width: 40rem;
+}
+
+.skip-button-container button{
+  font-style: italic;
+  text-decoration: underline;
+  background-color: transparent;
+  position: absolute;
+  bottom: 10px; 
+  right: 10px; 
+  border: none;
+ 
+}
+
+.carousel-controls{
+  position: absolute;
+  bottom: 10px; 
+  right:auto; 
+  width: 40rem;
+
+}
+
+.musical-notes-buttons button{
+ margin: 5px;
+}
+  
+.musical-notes-container{
+  margin: 0;
+}
+
+.step0-carousel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.step0-6-carousel h2{
+  font-family: 'Outfit', sans-serif;
+  font-size: 3em;
+  margin-top: 40%;
+  color:#ffffff
+}
+
+.step0-6-carousel p{
+  font-family: 'Outfit', sans-serif;
+  font-size: 3em;
+  margin-bottom: 20%;
+  color: #ececec;
+}
+
+.complete-carousel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.complete-carousel h2{
+  font-family: 'Outfit', sans-serif;
+  font-size: 2em;
+  margin-top: 40%;
+  color:#ffffff
+}
+
+.complete-carousel p{
+  font-family: 'Outfit', sans-serif;
+  font-size: 2em;
+  margin-bottom: 5%;
+  color: #ececec;
+}
+
+.modal-content {
+  position: absolute;
+  width: 90%;
+  max-width: 500px;
+  background: #000000;
+  color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.6);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.popup-style {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-body label {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 8px;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+}
+
+.modal-body select,
+.modal-body input {
+  width: 70%;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #000000;
+  background-color: #ffffff;
+  color: #000000;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+
+.divider {
+  text-align: center;
+  margin: 15px 0;
+  font-size: 0.9rem;
+  color: #888;
+  position: relative;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background: #fbfbfb;
+}
+
+.divider::before {
+  left: 0;
+}
+
+.divider::after {
+  right: 0;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.save {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: #49f390;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.modal-input {
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background-color: #2b2b3f;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+
+@media (max-width: 600px) {
+  .modal-content {
+    padding: 15px;
+  }
+
+  .modal-body label {
+    font-size: 0.9rem;
+  }
+
+
+  .modal-footer button {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+  }
+}
+
+.test{
+  width: 60vh;
+}
+
+.back-button-container-top-categories button{
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #57e391;
+}
+
+
+
+.delete-level-container{
+  position: absolute;
+  top: 10px; 
+  right: 10px; 
+  width: 40rem;
+}
+
+.delete-level-container button{
+  background-color: transparent;
+  color: rgb(255, 255, 255);
+  background-color: rgb(217, 72, 72);
+  position: absolute;
+  top: 10px; 
+  right: 10px; 
+  border: none;
+ 
 }

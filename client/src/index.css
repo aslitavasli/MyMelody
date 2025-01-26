@@ -6,6 +6,7 @@
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #070707;
+  margin: 0;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -24,6 +25,7 @@ a:hover {
 
 body {
   margin: 0;
+  padding: 0;
   display: flex;
   place-items: center;
   min-width: 320px;

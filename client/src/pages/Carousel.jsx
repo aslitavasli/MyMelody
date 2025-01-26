@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 import Step0 from './MIT Steps/Step0';
 import Step1 from './MIT Steps/Step1';
@@ -64,6 +65,23 @@ const Carousel = () => {
     setCurrentStep(7);
   };
 
+  const deleteLevel = async ()=> {
+    try {
+      console.log(phrase)
+      console.log('phrase')
+      const response = await axios.delete(`/api/deleteLevel/${phrase} `);
+
+      if (response.status === 200) {
+        console.log('Level deleted successfully');
+        navigate('/levels'); 
+      } else {
+        console.error('Failed to delete the level');
+      }
+    } catch (error) {
+      console.error('Error deleting the level:', error);
+    }
+  }
+
   const prevStep = () => {
     setCurrentStep((prev) => (prev > 0 ? prev - 1 : prev));
   };
@@ -79,14 +97,14 @@ const Carousel = () => {
 
 
   const handleGoBack = () => {
-    navigate('/menu')
+    navigate('/levels')
 };
 
   return (
     <div className="carousel-container">
 
-        <div style={{ marginTop: '20px' }}>
-                <button onClick={handleGoBack} style={{ backgroundColor: '#f0f0f0', padding: '10px', border: '1px solid #ccc' }}>
+        <div className='back-button-container'>
+                <button onClick={handleGoBack}>
                     Go Back
                 </button>
       </div>
@@ -104,8 +122,10 @@ const Carousel = () => {
       <div className="carousel-controls">
         {currentStep !== 0 && <button onClick={prevStep}>Previous</button>}
         {currentStep !== steps.length - 1 && <button onClick={nextStep}>Next</button>}
-        {currentStep !== 7 && <button onClick={skipEnd}>Skip To End </button>}
       </div>
+
+      <div className='skip-button-container'> {currentStep !== 7 && <button onClick={skipEnd}>Skip To End </button>}</div>
+      <div className='delete-level-container'> <button onClick={deleteLevel}> Delete Level </button> </div>
     </div>
   );
 };
