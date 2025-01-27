@@ -1,7 +1,7 @@
 # MyMelody: An Online Melodic Intonation Therapy App
 ### NOTE: It takes a bit for Render to start the backend :/ So, please wait a bit! 
 
-![Hiii!!!](https://youtu.be/opj-dYy8WL8)
+[Hiii!!!](https://youtu.be/opj-dYy8WL8)
 
 ## What is Melodic Intonation Therapy?
 
@@ -12,7 +12,7 @@ The process typically involves three blocks:
 2. Encouraging the patient to hum or sing along.  
 3. Gradually transitioning to natural speech without the melodic support.  
 
-![MyMelody's version](https://youtu.be/lY08cXfHfKY)
+[MyMelody's version](https://youtu.be/lY08cXfHfKY)
 
 The structured, repetitive nature of MIT has been shown to be highly effective in helping patients regain their speech abilities.
 
@@ -22,7 +22,7 @@ The structured, repetitive nature of MIT has been shown to be highly effective i
 [Deployed Link!](http://mymelody-3sak.onrender.com)
 
 
-![Overview](https://youtu.be/EoflLgZ2SbY)
+[Overview](https://youtu.be/EoflLgZ2SbY)
 
 
 ## Running Locally:
