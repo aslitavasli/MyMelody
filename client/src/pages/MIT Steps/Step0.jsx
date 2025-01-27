@@ -1,5 +1,5 @@
 
-//This step is humming
+
 const Step0 = ({phrase}) => {
 
 

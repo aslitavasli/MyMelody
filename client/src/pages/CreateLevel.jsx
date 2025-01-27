@@ -77,7 +77,6 @@ const CreateLevel = () => {
                 setError(response.data.error);
             }
         } catch (error) {
-            console.log(error);
             setError("An error occurred, please try again (or another sentence)!");
         }
     };

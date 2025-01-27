@@ -1,7 +1,6 @@
 const dotenv = require('dotenv').config()
 const AWS = require('aws-sdk');
 const axios = require('axios');
-// const Groq = require('groq-sdk')
 const OpenAI = require('openai')
 const Word = require('../models/word');
 const fs = require('fs')
@@ -13,6 +12,7 @@ const { PollyClient, SynthesizeSpeechCommand } = require('@aws-sdk/client-polly'
 
 const isLoaded = false
 
+/********** initializing the AWS s3 bucket (for audio storage) *******/
 const s3 = new AWS.S3({
   region: process.env.AWS_REGION,
   credentials: {
@@ -20,29 +20,41 @@ const s3 = new AWS.S3({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   },});
 
-const s3Bucket = process.env.AWS_S3_BUCKET_NAME; // Replace with your S3 bucket name
+const s3Bucket = process.env.AWS_S3_BUCKET_NAME; 
 
 
-// //initializing groq API
-// const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+/********** initializing OpenAI for breaking words into syllables *******/
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
 
+/********** initializing the Polly API for audio generation *******/
 
 const polly = new PollyClient({
-  region: process.env.AWS_REGION,  // Ensure you have the correct region
+  region: process.env.AWS_REGION,  
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   }},);
 
 
+ /********** test for checking if POSTMAN is working ****/ 
 const test = (req, res) => {
     res.json("test is working");
   };
   
+
+  /*************** handleSentence **********/
+  /* This is called by createLevel when a user enters a sentence to generate  a level. 
+  * 1. It breaks the sentence into words and hands it off to processword() for individual processing. 
+  * it creates 2 attempts, in case ChatGPT or Polly fail. This returns an array of pronounciations.
+  * 2. It determines spelling of the word by feeding it to ChatGPT and asking it to break it down.
+  * 3. It determines which syllables are supposed to be high and low by feeding it to processFlow.
+  * 
+  * Returns the pitches, pronounciations, and syllables of the sentence.
+  */
+
 const handleSentence = async (req, res) => {
 
     var sentence = req.query.sentence
@@ -89,9 +101,7 @@ const handleSentence = async (req, res) => {
       var pitches = []
       //determine the flow
       pitches = determineFlow(determiningPitches)
-    //also in handleSentence, we have to determine a way of which is high which is low 
-    //breakSentenceIntoSyllables
-    //return each word and 0-1 indicating high & low
+  
       if (pitches.length == 0){
         res.json({error: 'Could not load the level, please try again.'})
       }
@@ -103,24 +113,21 @@ const handleSentence = async (req, res) => {
 
 
 
-//NOTE: add smth for processing 's
+/************ processword ************/
+/* called by processsentence.
+* Sees if the word exists in the MongoDB dictionary. If it does, returns it.
+* Else, it creates a word entry for the word in MongoDB by determining pronounciation and spellings.
+* Returns a word entry of a Word model.
+*/
 
 const processword = async (word) => {
 
   try{
-    //retreive the word as a parameter
-    // word = req.body
-    // word = "children"
-    //see if it exists within the word bank?
-
+   
     const foundWord = await Word.findOne({ original: word });
 
     if (foundWord){
-      console.log('found')
-      console.log(foundWord)
       return foundWord
-
-   
     }
 
     //if it doesnt exist
@@ -146,20 +153,15 @@ const processword = async (word) => {
 
         await WordEntry.save();
 
-        console.log('Word Entry:')
-        console.log(WordEntry)
-
         return WordEntry.audioData
       }
 
-      //if the word is greater than 3 letters
+      //if the word is greater than 3 letters, try various methods.
       else{ 
 
         //json hasn't been loaded yet
           if (!isLoaded){
-            console.log('I happen lmfao')
             try {
-
               var rawData = fs.readFileSync('./resources/word_to_ipa_with_syllables.json', 'utf-8');
               var wordData = JSON.parse(rawData);
               console.log('JSON file successfully loaded into memory.');
@@ -172,12 +174,10 @@ const processword = async (word) => {
           //METHOD 1: USE THE JSON FILE
         //retreive the word from the JSON file (credit: https://github.com/Madoshakalaka/English-IPA/blob/master/word_to_ipa_with_syllables.json )
         if (word in wordData){
-          console.log('inWordData')
-        console.log(wordData[word])
-        var syllableNumber = wordData[word].length
-        var ipaFormat = ''
-        var original_spelled = ''
-        var ipa_spelled = ''
+          var syllableNumber = wordData[word].length
+          var ipaFormat = ''
+          var original_spelled = ''
+          var ipa_spelled = ''
 
         for ( let i = 0; i < syllableNumber; i++){
           //build original ipa format
@@ -194,14 +194,6 @@ const processword = async (word) => {
             ipa_spelled = ipa_spelled + (wordData[word][i][1])
           }
         }
-
-        console.log('TEST')
-        console.log(original_spelled)
-        console.log(ipa_spelled)
-        console.log(syllableNumber)
-        console.log(ipaFormat)
-
-
           //create the entry of the word into the audio bank 
         WordEntry = await Word.create({
           original: word,
@@ -213,9 +205,6 @@ const processword = async (word) => {
         });
 
         syllables = ipa_spelled.split('-')
-
-        console.log('this is the word entry ')
-        console.log(WordEntry)
       }
       else {
 
@@ -223,8 +212,7 @@ const processword = async (word) => {
         //retreive the word from Oxford Dictionary API (if the word doesn't exist in the created list)
         const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`;
         const response = await axios.get(url);
-        console.log('response of oxford')
-        console.log(response.data[0])
+   
         //retreive the IPA format from the JSON response
         ipaFormat = response.data[0].phonetic
 
@@ -242,10 +230,6 @@ const processword = async (word) => {
         const spelledIpa = await JSON.parse(openAIResponse.choices[0]?.message?.content)
 
         //get an array list
-        console.log('original ipa')
-        console.log(ipaFormat)
-        console.log(spelledIpa)
-        console.log(spelledIpa.original_spelled)
         syllables = spelledIpa.hyphen_ipa.split('-')
         syllableNumber = syllables.length
 
@@ -294,9 +278,8 @@ const processword = async (word) => {
       return WordEntry
 
   } catch (error) {
-    
+    //if an error, delete the incomplete word entry.
     Word.deleteOne({word})
-    console.log('error!')
     return false;
   }
   
@@ -413,7 +396,11 @@ const generatePollyAudio = async (ipa, word, syllableIndex, pitch, isMonosyllabl
   }
 };
 
-//determine a flow. 
+/************ determineFlow **********/
+/* It takes spellings and determines which ones should be high or low pitch. It is stored as
+* an array list of numbers: ie. [0,1,0,0] low high low low
+*/
+
 const determineFlow = (spellings) => {
   pitches = []
   low = true
@@ -421,36 +408,29 @@ const determineFlow = (spellings) => {
 
   console.log('spellings: ', spellings)
   for (let i = (spellings.length)-1; i >= 0; i--){
-      console.log(spellings[i])
+  
     if (spellings[i] == '-' || spellings[i] == ' '){
-      
       monosyllable = false
       if (low){
         pitches.unshift(0)
         low = false
-        console.log('i happen')
       }
-      
+  
       else{
         pitches.unshift(1)
         low = true
-        console.log('me too')
       }
-
     }
-
   }
 
   //account for the first part
   if (monosyllable){
     if (low){
       pitches.unshift(0)
-      console.log('i happen 2')
     }
 
     else{
       pitches.unshift(1)
-      console.log('i happen 3')
     }
   }
   
@@ -458,46 +438,49 @@ const determineFlow = (spellings) => {
 }
 
 
+/***************** getCategories ******************/
+/* This returns a list of categories that exists in the system, along with populated levels (not just id's)
+* (not just id's as they will be accessed later)
+*/
+
 const getCategories = async (req, res) => {
   try {
     const categories = await Category.find()
-      .populate('levels')  // This will populate the levels field with the associated Level documents
+      .populate('levels')  
       .exec();
-
-    // const categoryNames = categories.map((category) => category.name); 
-    // console.log('category names:', categoryNames)
     return res.status(200).json({ categories: categories });
-    // res.status(200).json({ categories: categoryNames });
+   
   } catch (error) {
-    console.error("Error fetching categories:", error);
     return res.status(500).json({ message: "Failed to fetch categories." });
   }
 };
 
 
+/***************** getCategoryNames ******************/
+/* This returns a list of category names that exists in the system.
+*/
 
 const getCategoryNames = async (req, res) => {
   try {
     const categories = await Category.find()
-      .populate('levels')  // This will populate the levels field with the associated Level documents
+      .populate('levels')  
       .exec();
-
-    const categoryNames = categories.map((category) => category.name); 
-    console.log('category names:', categoryNames)
-    // res.status(200).json({ categories: categories });
+    const categoryNames = categories.map((category) => category.name);   
     return res.status(200).json({ categories: categoryNames });
   } catch (error) {
-    console.error("Error fetching categories:", error);
     return res.status(500).json({ message: "Failed to fetch categories." });
   }
 };
+
+/************* saveLevel **********************/
+/* Saves a level that the user has created, taking in categories, phrases, spellings, and
+* pitches the user has constructed.
+*/ 
 
 const saveLevel = async (req, res)=> {
 
   const { selectedCategory, phrase, pronounciations, spellings, pitches } = req.body;
 
-  console.log('piotches')
-  console.log(pitches)
   const categoryName = selectedCategory.toLowerCase();
   const levelName = phrase.toLowerCase();
 
@@ -528,6 +511,10 @@ const saveLevel = async (req, res)=> {
   return res.json({message: "Level successsfully created!"})
 }
 
+/************* saveLevelAndCategory **********************/
+/* Saves a level And Category that the user has created, taking in the new category, phrases, spellings, and
+* pitches the user has constructed.
+*/ 
 
 const saveLevelAndCategory = async (req, res)=> {
 
@@ -555,9 +542,9 @@ const saveLevelAndCategory = async (req, res)=> {
 
     if (newLevel){
     //add the level to the category
-    currCategory.levels.push(newLevel)
-   await currCategory.save()
-    return res.json({message: "This category already exists and the level has been saved there!"})
+      currCategory.levels.push(newLevel)
+      await currCategory.save()
+      return res.json({message: "This category already exists and the level has been saved there!"})
     }
 
   }
@@ -583,23 +570,25 @@ const saveLevelAndCategory = async (req, res)=> {
   return res.json({message: 'Your level and category have been created!', category: newlyCreatedCategory})
 }
 
+
+/************ thisLevelExists  *********/
+/* Checks if this level already exists
+*/
+
 const thisLevelExists = async (req, res) => {
 
   try {
     const { phrase } = req.query;
-    console.log(phrase)
-    console.log('phrase^')
+  
     //does this level already exist?
     const exists = await Level.findOne({phrase: phrase})
   
-   
+
     if (exists){
       const categoryUnder = await Category.findOne({ levels: exists }).populate('name')
-     
-      // console.log(res)
+    
       return res.json({category: categoryUnder.name})
     }
- 
     //category doesn't exist
     else {
     
@@ -608,7 +597,6 @@ const thisLevelExists = async (req, res) => {
 
   }
   catch (err){
-    console.log('whopsoe')
     return (res.json({error: "An error occured."}))
   }
 }

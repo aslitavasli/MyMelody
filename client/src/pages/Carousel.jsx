@@ -67,12 +67,10 @@ const Carousel = () => {
 
   const deleteLevel = async ()=> {
     try {
-      console.log(phrase)
-      console.log('phrase')
+      
       const response = await axios.delete(`/api/deleteLevel/${phrase} `);
 
       if (response.status === 200) {
-        console.log('Level deleted successfully');
         navigate('/levels'); 
       } else {
         console.error('Failed to delete the level');

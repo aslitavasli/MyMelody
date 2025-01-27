@@ -7,24 +7,24 @@ const mongoose = require('mongoose');
 const app = express();
 app.use(cors());
 
-// Use dynamic port for Render, fallback for local development
+// use dynamic port for Render, fallback for local development
 const port = process.env.PORT || 8000;
 
-// Database connection
+// database connection
 mongoose
   .connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Database connected'))
   .catch((err) => console.error('Database connection error:', err));
 
-// Middleware
+// middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 
-// Routes
+// routes
 app.use('/', routes);
 
-// Start the server and bind to 0.0.0.0
+// start the server and bind to 0.0.0.0 (for render. If localhost, change!)
 app.listen(port, '0.0.0.0', () => {
   console.log(`Server is running on port ${port}`);
 });
