@@ -190,8 +190,8 @@ function PracticeLevels() {
           }}>
             <h3>Are you sure you want to delete this category? This will also delete all the levels. </h3>
             <div>
-              <button className="save-saveLevelbutton" onClick={confirmDeleteCategory} style={{ padding: '8px 15px', marginRight: '10px', backgroundColor: 'white' }}>Yes, Delete</button>
-              <button className="save-cancelLevelbutton" onClick={closeDeleteModal} style={{ padding: '8px 15px', backgroundColor: 'white' }}>Cancel</button>
+              <button className="save-saveLevelbutton" onClick={confirmDeleteCategory} style={{ padding: '8px 15px', marginRight: '10px' }}>Yes, Delete</button>
+              <button className="save-cancelLevelbutton" onClick={closeDeleteModal} style={{ padding: '8px 15px' }}>Cancel</button>
             </div>
           </div>
         </div>
