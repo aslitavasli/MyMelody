@@ -250,8 +250,8 @@ const Completed = ({ phrase, pronounciations, spellings, pitches }) => {
   </div>
 
   <div className="modal-footer">
-    <button className="save" onClick={editLevel}>Save</button>
-    <button onClick={closeEditModal}>Cancel</button>
+    <button className="modal-footer-save" onClick={editLevel}>Save</button>
+    <button className="modal-footer-cancel" onClick={closeEditModal}>Cancel</button>
   </div>
 </Modal>
 

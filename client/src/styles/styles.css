@@ -853,6 +853,16 @@
   gap: 10px;
 }
 
+.modal-footer-save {
+  background-color: #38ed83;
+  color: white;
+}
+
+.modal-footer-cancel{
+  background-color: white;
+  color: black;
+}
+
 .save {
   padding: 10px 20px;
   border: none;
