@@ -663,7 +663,7 @@
 }
 
 .tap-button {
- 
+  cursor: default;
   font-weight: bold;
 }
 
