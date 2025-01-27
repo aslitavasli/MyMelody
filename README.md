@@ -1,5 +1,5 @@
 # MyMelody: An Online Melodic Intonation Therapy App
-### NOTE: It takes a bit for Render to start the backend :/ So, please wait a bit! 
+### NOTE: It takes a bit for Render to start the backend :/ So, please wait a bit! [Render's policy on free web services](https://render.com/docs/free#spinning-down-on-idle)
 
 [Hiii!!!](https://youtu.be/opj-dYy8WL8)
 
@@ -66,6 +66,11 @@ This issue highly impacted my LLM choice. I chose Polly because it had ssml synt
 
 
 ## Important Parts:
+
+### Note: The process of storage is as follows:
+- for each word: (audio pronounciations with different pitches (stored in AWS S3 audio bank), spellings, sentence pitch): all stored in a MongoDB dictionary (independent of 'level' creation: if a word is entered, it becomes created in the word dictionary even if it isn't saved in a level (so that a word is 'created' only once for faster performance)
+- for a sentence: (info on each word is stored in a level schema) (if a level is created)
+- for a category (category schema, with a list of references to each level that is stored in the category)
 
 ### Amazon S3 Bucket: 
 Acts as an audio bank for each word that is entered. Each word folder has pronounciations of each syllables (both high and low versions).
