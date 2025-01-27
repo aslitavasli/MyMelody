@@ -601,11 +601,14 @@ const thisLevelExists = async (req, res) => {
   }
 }
 
+
+/************* changeLevelCategory **********/
+/* This function changes the preexisting level's category.
+*/
+
 const changeLevelCategory = async (req, res) =>{
 
   const { phrase, finalCategory } = req.body;
-  console.log('this is the phrase and category', phrase)
-  console.log(finalCategory)
   const level = await Level.findOne({phrase: phrase})
   const oldCategory = await Category.findOne({ levels: level })
   const newCategory = await Category.findOne({ name: finalCategory })
@@ -622,7 +625,6 @@ const changeLevelCategory = async (req, res) =>{
     await newlyCreatedCategory.levels.push(level)
     await newlyCreatedCategory.save();
 
-    //RETURN NAME?
   }
     if (oldCategory){
     await oldCategory.populate('levels');
@@ -636,6 +638,12 @@ const changeLevelCategory = async (req, res) =>{
     return res.json({message: "Success!"})
   }
 }
+
+
+/********** deleteCategory ******/
+/* This function deletes a category and all the levels that exist under it.
+*
+*/ 
 
 const deleteCategory = async (req, res) => {
   try{
@@ -655,26 +663,31 @@ const deleteCategory = async (req, res) => {
   
 }
 
+
+
+/********** changeCategoryName ******/
+/* This function updates a category's name.
+*
+*/ 
+
 const changeCategoryName = async (req, res) => {
 
   try{
   const { oldCategory, newName} = req.body;
-
   const categoryWithNewName = await Category.findById(oldCategory._id)
   categoryWithNewName.name = newName;
   await categoryWithNewName.save()
 
-  // const updatedCategory = await Category.findByIdAndUpdate(oldCategory._id, {name: newName})
   } catch (error){
     res.json({error: "Error changing the category's name. Please try again."})
   }
    res.json({message: "Category updated successfully!"})
 }
 
-const deleteLevel = async (req,res) =>{
-  const { phrase } = req.params; // Get the level ID from the request parameters
+  const deleteLevel = async (req,res) =>{
+  const { phrase } = req.params; // get the level ID from the request parameters
 
-  const level = await Level.findOne({phrase: phrase}); // Find and delete the level by ID
+  const level = await Level.findOne({phrase: phrase}); // find and delete the level by ID
 
   if (!level){
     res.json({ message: 'Level deleted successfully.' });
@@ -683,19 +696,19 @@ const deleteLevel = async (req,res) =>{
   try {
 
     await Category.findOneAndUpdate(
-      { levels: level._id }, // Find the category containing the level
-      { $pull: { levels: level._id } } // Remove the `exists` value from the `levels` array
+      { levels: level._id }, // find the category containing the level
+      { $pull: { levels: level._id } } // remove the `exists` value from the `levels` array
     );
     
     result = await Level.findByIdAndDelete(level._id);
     
     if (!result) {
-      return res.json({ error: 'Level not found' }); // Return 404git p if no level was found
+      return res.json({ error: 'Level not found' }); 
     }
-    res.json({ message: 'Level deleted successfully' }); // Return success response
+    res.json({ message: 'Level deleted successfully' }); 
   } catch (error) {
     console.log(error)
-    res.status(500).json({ error: `the error is ${error} `}); // Return error response
+    res.status(500).json({ error: `the error is ${error} `}); 
   }
 }
 module.exports = {
