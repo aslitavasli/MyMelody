@@ -172,8 +172,8 @@ function PracticeLevels() {
                }}
             />
             <div>
-              <button onClick={handleEditCategory} style={{ padding: '8px 15px', marginRight: '10px' }}>Save</button>
-              <button onClick={() => setIsModalOpen(false)} style={{ padding: '8px 15px' }}>Cancel</button>
+              <button onClick={handleEditCategory} style={{ padding: '8px 15px', marginRight: '10px', backgroundColor: 'white'}}>Save</button>
+              <button onClick={() => setIsModalOpen(false)} style={{ padding: '8px 15px', backgroundColor: 'white' }}>Cancel</button>
             </div>
           </div>
         </div>
@@ -190,8 +190,8 @@ function PracticeLevels() {
           }}>
             <h3>Are you sure you want to delete this category? This will also delete all the levels. </h3>
             <div>
-              <button onClick={confirmDeleteCategory} style={{ padding: '8px 15px', marginRight: '10px' }}>Yes, Delete</button>
-              <button onClick={closeDeleteModal} style={{ padding: '8px 15px' }}>Cancel</button>
+              <button onClick={confirmDeleteCategory} style={{ padding: '8px 15px', marginRight: '10px', backgroundColor: 'white'  }}>Yes, Delete</button>
+              <button onClick={closeDeleteModal} style={{ padding: '8px 15px', backgroundColor: 'white' }}>Cancel</button>
             </div>
           </div>
         </div>

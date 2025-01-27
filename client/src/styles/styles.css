@@ -544,6 +544,7 @@
 
 .single-category-buttons button{
   background-color: #3a10b8;
+  color: white;
   margin: 0.5rem;
 }
 
@@ -695,8 +696,16 @@
 
 }
 
+.carousel-controls button{
+  color: white;
+  margin: 5px;
+}
+
+
+
 .musical-notes-buttons button{
  margin: 5px;
+ color: white
 }
   
 .musical-notes-container{
@@ -742,6 +751,11 @@
   color: #ececec;
 }
 
+.complete-carousel button{
+ 
+  color: #ffffff;
+}
+
 .modal-content {
   position: absolute;
   width: 90%;
@@ -753,6 +767,17 @@
   box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.6);
   animation: fadeIn 0.3s ease-in-out;
 }
+
+.save-saveLevelbutton{
+ background-color:#49f390;
+ color: white;
+}
+
+.save-cancelLevelbutton{
+  background-color: white;
+  color: black;
+ }
+ 
 
 .popup-style {
   top: 50%;
