@@ -1,5 +1,6 @@
 # MyMelody: An Online Melodic Intonation Therapy App
 ### NOTE: It takes a bit for Render to start the backend :/ So, please wait a bit! [Render's policy on free web services](https://render.com/docs/free#spinning-down-on-idle)
+(Also, levels/categories are scrollable. Scroll down to see all of them.)
 
 [Hiii!!!](https://youtu.be/opj-dYy8WL8)
 
